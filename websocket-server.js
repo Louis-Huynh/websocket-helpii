@@ -1,19 +1,27 @@
-const express = require("express");
-const PORT = process.env.PORT || 3001;
-const server = express().listen(PORT, () => {
-  console.log(`Listening on ${PORT}`);
-});
-const { Server, CLOSING } = require("ws"); //ws server
-const wss = new Server({ server });
+const port = 8080 || process.env.port;
+
+const WebSocket = require("ws");
+
+const wss = new WebSocket.Server({ port: port });
 
 wss.on("connection", function connection(ws) {
   ws.on("message", function incoming(data) {
     let getData = JSON.parse(data);
+    console.log(getData.type);
 
-    wss.clients.forEach(function each(client) {
-      client.send(getData);
-    });
+    const sendMessage = () => {
+      wss.clients.forEach(function each(client) {
+        if (client !== ws && client.readyState === WebSocket.OPEN) {
+          data.type = "chat";
+          client.send(data);
+          console.log(`Hi data: ${data}`);
+        }
+      });
+    };
 
-    console.log(`message received: ${getData}`);
+    switch (getData.type) {
+      case "chat":
+        sendMessage();
+    }
   });
 });
