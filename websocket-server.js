@@ -11,11 +11,7 @@ wss.on("connection", function connection(ws) {
 
     const sendMessage = () => {
       wss.clients.forEach(function each(client) {
-        if (client !== ws && client.readyState === WebSocket.OPEN) {
-          data.type = "chat";
-          client.send(data);
-          console.log(`Hi data: ${data}`);
-        }
+        client.send(data);
       });
     };
 
