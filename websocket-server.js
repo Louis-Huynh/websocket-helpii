@@ -1,13 +1,17 @@
-const port = 8080 || process.env.port;
+const express = require("express");
 
-const WebSocket = require("ws");
+const PORT = process.env.PORT || 8080;
+const server = express().listen(PORT, () =>
+  console.log(`Listening on ${PORT}`)
+);
 
-const wss = new WebSocket.Server({ port: port });
+const { Server } = require("ws");
+
+const wss = new Server({ server });
 
 wss.on("connection", function connection(ws) {
   ws.on("message", function incoming(data) {
     let getData = JSON.parse(data);
-    console.log(getData.type);
 
     const sendMessage = () => {
       wss.clients.forEach(function each(client) {
